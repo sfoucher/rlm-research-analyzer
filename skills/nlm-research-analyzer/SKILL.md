@@ -236,3 +236,61 @@ After all subagents return:
    ```
    > **Skipped questions:** <list question labels from warnings>
    ```
+
+## Stage 4 — Aggregate
+
+0. Read `<working_dir>/nlm_plan_<notebook-slug>.md` for: research questions, labels, `<notebook_id>`, and `## Warnings`. Count expected batches. For each missing `slice_N.md`, append to `## Warnings`: `Question <N> — no slice file found.` For each slice file with no `##` heading, treat as failed and append: `Question <N> — slice file is empty.`
+
+1. Read all `<working_dir>/slice_*.md` files.
+
+2. Consolidate research question verdicts from each slice's `### Verdict` section. Apply in priority order:
+   - **Answered:** slice verdict is `answered`
+   - **Partially answered:** slice verdict is `partially answered`
+   - **Unresolved:** slice verdict is `unresolved`, file missing, or file empty
+   Match each slice's label against the canonical labels from the plan file using exact string match first, then substring fuzzy match. If no match is found, treat as Unresolved and append to `## Warnings`: `Label mismatch in slice_<N>.md — could not match: "<unmatched text>".`
+
+3. Write `<working_dir>/nlm_answer_<notebook-slug>.md`:
+
+   ```markdown
+   # Synthesis: <Notebook Name>
+   Focus question: <question or "open synthesis">
+   Date: <today's date>
+
+   > **Source note:** The source index was built by querying the notebook directly and may not enumerate all sources completely. Consult the notebook at <notebook_url> for full source attribution.
+
+   ## Per-Question Answers
+
+   [Copy each slice's full ## Research Question N section verbatim — Answer, Key Findings, Sources Cited. Omit the Verdict lines. Sort by question number.]
+
+   ## Cross-Question Synthesis
+
+   ### Themes
+   [3–7 themes supported by findings from ≥2 questions. For each: 1–2 sentences + questions supporting it, e.g. "(Q1, Q3)". If fewer than 3 themes qualify, note "Insufficient cross-question convergence for N theme(s)".]
+
+   ### Agreements
+   [Findings where ≥2 questions converge on the same conclusion. Reference questions by label.]
+
+   ### Contradictions
+   [Findings where different questions produced opposing conclusions about the same phenomenon. Name the questions and the disagreement. If none: "No contradictions identified."]
+
+   ### Gaps & Open Questions
+   [Topics not addressed by any question's answer. MINOR reviewer issues from Stage 5 are appended here.]
+
+   ## Research Questions Status
+
+   ### Answered
+   - **<label>:** <summary of answer with sources> (Sources: <as cited in slice>)
+
+   ### Partially Answered
+   - **<label>:** <what was found and what remains unclear>
+
+   ### Unresolved
+   - **<label>:** <why unresolved — no content returned, question not addressed, etc.>
+   ```
+
+   Omit any Research Questions Status subsection with no entries.
+
+   If any questions were skipped (warnings in plan file), insert before `## Cross-Question Synthesis`:
+   ```
+   > **Skipped questions:** <list question labels from warnings>
+   ```

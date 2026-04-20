@@ -158,3 +158,23 @@ Format: `"Notebook Name"` or `"Notebook Name" focus question`
 
    ## Warnings
    ```
+
+## Stage 3 — Delegate
+
+Read `<working_dir>/nlm_plan_<notebook-slug>.md` to retrieve: research questions, canonical labels, `<notebook_id>`, and any existing warnings.
+
+Read the worker prompt template from `<skill_dir>/references/worker-prompt.md`. For each batch, fill in all placeholders:
+- `<working_dir>` → absolute run directory
+- `<N>` → batch number
+- `<notebook_id>` → from plan file
+- `<question>` → the research question text for this batch
+- `<label>` → the canonical label for this batch
+
+Spawn one `Agent` subagent per batch **in parallel** (all batches in a single message with multiple Agent tool calls). Set each worker's `description` to `"Question N — <label>"` (substitute actual values) and `model` to `"haiku"`.
+
+After all subagents return:
+- If a subagent's return value does not contain the text `"Question <N> complete"`, treat it as failed. Open `<working_dir>/nlm_plan_<notebook-slug>.md` and append under `## Warnings`:
+  ```
+  - Question <N> failed or returned empty: <question text>
+  ```
+- Continue regardless. Failed questions will be marked Unresolved in Stage 4.

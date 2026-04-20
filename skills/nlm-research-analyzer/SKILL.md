@@ -294,3 +294,24 @@ After all subagents return:
    ```
    > **Skipped questions:** <list question labels from warnings>
    ```
+
+## Stage 5 — Verify
+
+Read the reviewer prompt template from `<skill_dir>/references/reviewer-prompt.md`. Before spawning each reviewer subagent, replace these placeholders throughout the template:
+- `<working_dir>` → the absolute run directory
+- `<collection-slug>` → `<notebook-slug>`
+- `<Collection Name>` → `<Notebook Name>`
+- `rlm_answer_<collection-slug>.md` → `nlm_answer_<notebook-slug>.md`
+- `rlm_review_<collection-slug>.md` → `nlm_review_<notebook-slug>.md`
+
+Also replace the section label "Per-Paper Summaries" in the reviewer prompt with "Per-Question Answers" — the reviewer should skip `## Per-Question Answers` and focus only on `## Cross-Question Synthesis` and `## Research Questions Status`.
+
+1. Spawn one `Agent` subagent with the filled-in reviewer prompt. Set `description` to `"Review synthesis pass 1"` and `model` to `"sonnet"`.
+
+2. Once returned, read `<working_dir>/nlm_review_<notebook-slug>.md`. For each FATAL or MAJOR issue: open `<working_dir>/nlm_answer_<notebook-slug>.md` and apply the suggested fix inline. Save the file.
+
+3. Spawn a second `Agent` subagent with `description` `"Review synthesis pass 2"` and `model` `"sonnet"`, using the same filled-in reviewer prompt.
+
+4. For each FATAL or MAJOR issue in the second pass: apply fixes as in step 2.
+
+5. For each MINOR issue from either pass: append to `### Gaps & Open Questions` in the answer file.

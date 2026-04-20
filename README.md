@@ -82,8 +82,11 @@ rlm-research-analyzer/
 ├── skills/
 │   └── rlm-research-analyzer/
 │       ├── SKILL.md                         # Skill definition (6 stages)
-│       └── scripts/
-│           └── make_pdf.py                  # PDF generation helper
+│       ├── scripts/
+│       │   └── make_pdf.py                  # PDF generation helper
+│       └── references/
+│           ├── worker-prompt.md             # Haiku worker subagent prompt template
+│           └── reviewer-prompt.md           # Adversarial reviewer subagent prompt template
 ├── examples/
 │   └── image-to-image-transfer/
 │       ├── rlm_answer_image-to-image-transfer.md
@@ -176,13 +179,13 @@ Then activate:
 In Claude Code, invoke the skill with:
 
 ```
-/rlm "Collection Name"
+/rlm-research-analyzer "Collection Name"
 ```
 
 Or with a focus question:
 
 ```
-/rlm "Collection Name" what methods are used for domain adaptation in remote sensing?
+/rlm-research-analyzer "Collection Name" what methods are used for domain adaptation in remote sensing?
 ```
 
 The collection name must be quoted when a focus question follows it. Without quotes and no focus question, the entire argument is treated as the collection name.

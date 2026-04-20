@@ -95,3 +95,66 @@ Format: `"Notebook Name"` or `"Notebook Name" focus question`
 
    <focus_filter>
    ```
+
+## Stage 2 — Plan
+
+1. Read `<working_dir>/nlm_index_<notebook-slug>.md`.
+
+2. Derive the research scope and present it to the user. Wait for approval before continuing.
+
+   Present exactly this structure:
+   ```
+   ## Research Scope
+
+   **Notebook:** <name>
+   **Focus question:** <question or "open synthesis">
+
+   **Key research questions:**
+   1. <specific, answerable question derived from focus question or inferred from source list>
+   2. <question>
+   (2–5 questions total)
+
+   Research questions must be: (a) answerable from notebook content; (b) specific enough to yield a clear answered/unresolved verdict; (c) aligned with the focus question if provided.
+
+   **Anticipated output sections:**
+   - Themes likely to emerge: <list based on source summaries>
+   - Source categories present: <empirical / review / theoretical / mixed>
+
+   **Note:** Source index is best-effort — NotebookLM may not have enumerated all sources completely.
+
+   **Verification checklist (to be completed before delivery):**
+   - [ ] All research questions answered or marked unresolved with reason
+   - [ ] Every major claim traceable to a cited source
+   - [ ] No single-source dependencies for key conclusions
+
+   Proceed with this scope? (yes / adjust)
+   ```
+
+3. If the user requests changes: apply them and re-present the updated scope. Repeat up to 3 rounds. After 3 rounds without approval, ask: "Proceed with the current scope, or stop?"
+
+4. Once approved: assign one batch number per research question (Batch 1 = Question 1, Batch 2 = Question 2, etc.). Compute a canonical short label (≤8 words) per question.
+
+5. Write `<working_dir>/nlm_plan_<notebook-slug>.md`:
+   ```markdown
+   # Plan: <Notebook Name>
+   Approved: <date>
+   Notebook ID: <notebook_id>
+
+   ## Research Questions
+   1. <question> — status: pending — label: <label>
+   2. <question> — status: pending — label: <label>
+
+   ## Batches
+
+   ### Batch 1
+   **Research question:** <question 1>
+   **Label:** <label 1>
+
+   ### Batch 2
+   **Research question:** <question 2>
+   **Label:** <label 2>
+
+   (one batch section per question)
+
+   ## Warnings
+   ```

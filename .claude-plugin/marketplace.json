@@ -5,17 +5,18 @@
     "email": "samuel.foucher@gmail.com"
   },
   "metadata": {
-    "description": "RLM Research Analyzer — synthesizes Zotero paper collections into structured literature reviews",
-    "version": "1.0.0"
+    "description": "RLM Research Analyzer — synthesizes Zotero collections or NotebookLM notebooks into structured literature reviews",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "rlm-research-analyzer",
-      "description": "Synthesizes a Zotero paper collection into a structured literature review with per-paper summaries, cross-paper themes, adversarial review passes, PDF output, and Zotero note creation.",
+      "description": "Synthesizes a Zotero paper collection or NotebookLM notebook into a structured literature review with per-paper summaries, cross-paper themes, adversarial review passes, and PDF output.",
       "source": "./",
       "strict": true,
       "skills": [
-        "./skills/rlm-research-analyzer"
+        "./skills/rlm-research-analyzer",
+        "./skills/nlm-research-analyzer"
       ]
     }
   ]

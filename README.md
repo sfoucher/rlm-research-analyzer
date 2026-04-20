@@ -29,6 +29,25 @@ Install optional PDF dependencies:
 pip install weasyprint markdown
 ```
 
+## Structure
+
+```
+rlm-research-analyzer/
+├── .claude-plugin/
+│   └── plugin.json                          # Plugin metadata
+├── skills/
+│   └── rlm-research-analyzer/
+│       ├── SKILL.md                         # Skill definition (6 stages)
+│       └── scripts/
+│           └── make_pdf.py                  # PDF generation helper
+├── examples/
+│   └── image-to-image-transfer/
+│       ├── rlm_answer_image-to-image-transfer.md
+│       └── rlm_provenance_image-to-image-transfer.md
+├── README.md
+└── LICENSE
+```
+
 ## MCP Configuration
 
 Add the `zotero` server to your Claude Code `settings.json` (typically `~/.claude/settings.json`):
@@ -93,13 +112,19 @@ Zotero desktop must be running when Claude Code is active — zotero-mcp reads t
 
 ## Installation
 
-Copy `SKILL.md` into your Claude Code skills directory:
+Install directly via Claude Code:
 
 ```
-~/.claude/skills/rlm-research-analyzer/SKILL.md
+/plugin install github:sfoucher/rlm-research-analyzer
 ```
 
-Claude Code will auto-discover the skill at session start.
+Or clone and install manually:
+
+```bash
+git clone https://github.com/sfoucher/rlm-research-analyzer
+```
+
+Then in Claude Code: `/plugin install /path/to/rlm-research-analyzer`
 
 ## Usage
 
@@ -135,10 +160,10 @@ In addition, a Zotero note is created on each processed paper with its per-paper
 
 ## PDF generation
 
-The `scripts/make_pdf.py` script converts the final Markdown answer to a styled PDF:
+The `skills/rlm-research-analyzer/scripts/make_pdf.py` script converts the final Markdown answer to a styled PDF:
 
 ```bash
-python scripts/make_pdf.py \
+python skills/rlm-research-analyzer/scripts/make_pdf.py \
   --collection "Image-to-Image Transfer" \
   --date "2026-04-20" \
   --input rlm-runs/image-to-image-transfer/rlm_answer_image-to-image-transfer.md \

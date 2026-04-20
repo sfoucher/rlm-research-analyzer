@@ -1,0 +1,8 @@
+{
+  "name": "rlm-research-analyzer",
+  "description": "Synthesizes a Zotero paper collection into a structured literature review with per-paper summaries, cross-paper themes, adversarial review passes, PDF output, and Zotero note creation.",
+  "author": {
+    "name": "Samuel Foucher",
+    "email": "samuel.foucher@gmail.com"
+  }
+}

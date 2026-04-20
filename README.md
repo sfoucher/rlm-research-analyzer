@@ -29,6 +29,68 @@ Install optional PDF dependencies:
 pip install weasyprint markdown
 ```
 
+## MCP Configuration
+
+Add the `zotero` server to your Claude Code `settings.json` (typically `~/.claude/settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "zotero": {
+      "type": "stdio",
+      "command": "/path/to/zotero-mcp",
+      "args": [],
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  }
+}
+```
+
+**With Gemini semantic search** (enables focus-question filtering):
+
+```json
+{
+  "mcpServers": {
+    "zotero": {
+      "type": "stdio",
+      "command": "/path/to/zotero-mcp",
+      "args": [],
+      "env": {
+        "ZOTERO_LOCAL": "true",
+        "ZOTERO_EMBEDDING_MODEL": "gemini",
+        "GEMINI_API_KEY": "your-gemini-api-key",
+        "GEMINI_EMBEDDING_MODEL": "gemini-embedding-001"
+      }
+    }
+  }
+}
+```
+
+**With OpenAI semantic search:**
+
+```json
+{
+  "mcpServers": {
+    "zotero": {
+      "type": "stdio",
+      "command": "/path/to/zotero-mcp",
+      "args": [],
+      "env": {
+        "ZOTERO_LOCAL": "true",
+        "ZOTERO_EMBEDDING_MODEL": "openai",
+        "OPENAI_API_KEY": "your-openai-api-key"
+      }
+    }
+  }
+}
+```
+
+Replace `/path/to/zotero-mcp` with the actual binary path after installing via `pip install zotero-mcp` or from the [zotero-mcp releases](https://github.com/ussoftwareassociation/zotero-mcp/releases). On Windows the binary is typically at `%USERPROFILE%\.local\bin\zotero-mcp.exe`. On macOS/Linux: `~/.local/bin/zotero-mcp`.
+
+Zotero desktop must be running when Claude Code is active — zotero-mcp reads the local SQLite database directly.
+
 ## Installation
 
 Copy `SKILL.md` into your Claude Code skills directory:

@@ -112,19 +112,20 @@ Zotero desktop must be running when Claude Code is active — zotero-mcp reads t
 
 ## Installation
 
-Install directly via Claude Code:
+In Claude Code, run these two commands:
 
 ```
-/plugin install github:sfoucher/rlm-research-analyzer
+/plugin marketplace add https://github.com/sfoucher/rlm-research-analyzer
+```
+```
+/plugin install rlm-research-analyzer@rlm-research-analyzer
 ```
 
-Or clone and install manually:
+Then activate:
 
-```bash
-git clone https://github.com/sfoucher/rlm-research-analyzer
 ```
-
-Then in Claude Code: `/plugin install /path/to/rlm-research-analyzer`
+/reload-plugins
+```
 
 ## Usage
 

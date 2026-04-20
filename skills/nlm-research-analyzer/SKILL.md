@@ -28,3 +28,70 @@ Format: `"Notebook Name"` or `"Notebook Name" focus question`
 - **`<notebook-slug>`:** notebook name lowercased, spaces → hyphens, non-alphanumeric chars removed. Example: `"Air Pollution India 2024"` → `air-pollution-india-2024`.
 - **`<working_dir>`:** `<project_root>/nlm-runs/<notebook-slug>/` where `<project_root>` is resolved via `pwd` at invocation time.
 - **`<skill_dir>`:** the base directory shown in the system reminder at invocation: "Base directory for this skill: <path>".
+
+## Stage 1 — Initialize
+
+1. Resolve `<working_dir>`:
+   ```bash
+   pwd
+   ```
+   Construct `<working_dir>` as `<pwd result>/nlm-runs/<notebook-slug>/`.
+
+2. Verify authentication:
+   - Call `mcp__notebooklm__get_health`.
+   - If `authenticated: false`: call `mcp__notebooklm__setup_auth` and wait for it to return `authenticated: true`. If it fails, stop and ask the user to complete authentication.
+
+3. Find the notebook:
+   - Call `mcp__notebooklm__list_notebooks`.
+   - Find the entry whose `name` matches `<Notebook Name>` (case-insensitive).
+   - If no exact match: call `mcp__notebooklm__search_notebooks` with `<Notebook Name>` as the query.
+   - If still no match, print:
+     ```
+     Notebook "<name>" not found in the notebooklm-mcp library.
+     Registered notebooks:
+     - <list all names from list_notebooks>
+
+     To register it: share the notebook URL from notebooklm.google.com and use add_notebook.
+     ```
+     Then stop.
+   - Record matched notebook's `id` as `<notebook_id>` and `url` as `<notebook_url>`.
+
+4. Activate the notebook:
+   - Call `mcp__notebooklm__select_notebook` with `id: <notebook_id>`.
+
+5. Enumerate sources (best-effort):
+   - Call `mcp__notebooklm__ask_question` with:
+     - `notebook_id: <notebook_id>`
+     - `question: "Please list all papers and sources in this notebook. For each one provide: title, authors, year (if available), and a 2–3 sentence summary of its main contribution."`
+   - Save the response as `<source_list>`.
+   - If the response is empty or under 100 characters: set `<source_list>` to `"Source enumeration unavailable — index will be minimal."` and add a note to the index.
+   - Save the returned `session_id` (if any) as `<enum_session_id>` for possible reuse in Stage 2.
+
+6. Apply focus question filter (if provided):
+   - Call `mcp__notebooklm__ask_question` with:
+     - `notebook_id: <notebook_id>`
+     - `question: "Which papers or sources in this notebook are most relevant to: <focus question>? List their titles and briefly explain why each is relevant."`
+   - Save the response as `<focus_filter>`.
+   - If no focus question: set `<focus_filter>` to `"N/A"`.
+
+7. Create the run directory:
+   ```bash
+   mkdir -p <working_dir>
+   ```
+
+8. Write `<working_dir>/nlm_index_<notebook-slug>.md`:
+   ```markdown
+   # Index: <Notebook Name>
+   Generated: <today's date>
+   Notebook ID: <notebook_id>
+   Notebook URL: <notebook_url>
+   Focus question: <focus question or "none">
+
+   ## Sources (as reported by notebook)
+
+   <source_list>
+
+   ## Focus Filter Results
+
+   <focus_filter>
+   ```

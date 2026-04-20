@@ -315,3 +315,64 @@ Also replace the section label "Per-Paper Summaries" in the reviewer prompt with
 4. For each FATAL or MAJOR issue in the second pass: apply fixes as in step 2.
 
 5. For each MINOR issue from either pass: append to `### Gaps & Open Questions` in the answer file.
+
+## Stage 6 — Deliver
+
+1. Add a Table of Contents to `<working_dir>/nlm_answer_<notebook-slug>.md` immediately after the `# Synthesis` heading:
+   ```markdown
+   ## Table of Contents
+   1. [Per-Question Answers](#per-question-answers)
+   2. [Cross-Question Synthesis](#cross-question-synthesis)
+   3. [Research Questions Status](#research-questions-status)
+   ```
+
+2. Generate PDF (optional — skip gracefully if weasyprint is not installed):
+   ```bash
+   /c/DEV/Miniconda3/envs/claude/python.exe <skill_dir>/scripts/make_pdf.py \
+     --collection "<Notebook Name>" \
+     --date "<today's date>" \
+     --input <working_dir>/nlm_answer_<notebook-slug>.md \
+     --output <working_dir>/nlm_answer_<notebook-slug>.pdf
+   ```
+   If the command fails for any reason, skip silently and note "PDF not generated" in the provenance file.
+
+3. Write `<working_dir>/nlm_provenance_<notebook-slug>.md`:
+   ```markdown
+   # Provenance: <Notebook Name>
+   Date: <today's date>
+   Notebook ID: <notebook_id>
+   Notebook URL: <notebook_url>
+
+   ## Run Summary
+   - Research questions: N total, N answered, N partially answered, N unresolved
+   - Questions skipped: N
+   - Reviewer passes: 2
+   - FATAL/MAJOR issues fixed: N
+   - MINOR issues noted: N
+
+   ## Output Files
+   - nlm_index_<notebook-slug>.md
+   - nlm_plan_<notebook-slug>.md
+   - slice_1.md … slice_N.md
+   - nlm_review_<notebook-slug>.md
+   - nlm_answer_<notebook-slug>.md
+   - nlm_answer_<notebook-slug>.pdf (if generated)
+   - nlm_provenance_<notebook-slug>.md
+   ```
+
+4. Print delivery summary:
+   ```
+   ## NLM Research Analyzer — Complete
+
+   **Notebook:** <Notebook Name>
+   **Questions:** N answered, N partially answered, N unresolved
+   **Output:** <working_dir>/nlm_answer_<notebook-slug>.md
+   **PDF:** <path or "not generated">
+
+   **Research Questions Status:**
+   - Answered: <labels>
+   - Partially answered: <labels>
+   - Unresolved: <labels>
+
+   **Reviewer:** 2 passes — N FATAL/MAJOR fixed, N MINOR noted
+   ```

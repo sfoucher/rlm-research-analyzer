@@ -1,0 +1,22 @@
+{
+  "name": "rlm-research-analyzer",
+  "owner": {
+    "name": "Samuel Foucher",
+    "email": "samuel.foucher@gmail.com"
+  },
+  "metadata": {
+    "description": "RLM Research Analyzer — synthesizes Zotero paper collections into structured literature reviews",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "rlm-research-analyzer",
+      "description": "Synthesizes a Zotero paper collection into a structured literature review with per-paper summaries, cross-paper themes, adversarial review passes, PDF output, and Zotero note creation.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/rlm-research-analyzer"
+      ]
+    }
+  ]
+}

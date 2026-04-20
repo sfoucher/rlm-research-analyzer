@@ -2,6 +2,23 @@
 
 A Claude Code skill that synthesizes a Zotero paper collection into a structured literature review — per-paper summaries, cross-paper themes, contradictions, gaps, and a research questions status table — delivered as Markdown, PDF, and Zotero notes.
 
+## The RLM pattern
+
+This plugin is loosely based on the [Recursive Language Model (RLM)](https://www.decodingai.com/p/recursive-language-models) inference pattern. RLM was designed to process documents too large for a single context window without RAG infrastructure: a root controller (frontier model) never reads the full data directly — it only sees metadata — and spawns cheaper worker sub-models to read slices, which return structured findings the root then aggregates. A validate pass checks the result for errors and inconsistencies.
+
+This plugin adapts that pattern to a **collection of independent papers**:
+
+| RLM concept | Plugin implementation |
+|---|---|
+| Root sees metadata only | Stage 1 fetches titles and abstracts only — no full text |
+| Workers read data slices | Stage 3 spawns one Haiku subagent per batch of ~5 papers; each reads full text via `zotero_get_item_fulltext` |
+| Cheaper worker models | Workers run on Haiku; the root and reviewer run on Sonnet |
+| Structured findings returned | Each worker writes a `slice_N.md` with standardized headings, confidence tags, and per-question verdicts |
+| Root aggregates | Stage 4 consolidates all slice files into themes, agreements, and contradictions |
+| Validate pass | Stage 5 runs an adversarial reviewer subagent twice, fixing all FATAL/MAJOR issues before delivery |
+
+The filesystem (`slice_N.md` files) serves as the persistent shared state between workers and the root — the equivalent of the REPL environment in the original pattern. No single model ever holds more than ~5 papers of full text at once, so the pipeline scales to arbitrarily large collections without context window saturation.
+
 ## What it does
 
 Given a Zotero collection name (and an optional focus question), the skill:

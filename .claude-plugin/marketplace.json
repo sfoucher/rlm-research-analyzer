@@ -13,7 +13,7 @@
       "name": "rlm-research-analyzer",
       "description": "Synthesizes a Zotero paper collection into a structured literature review with per-paper summaries, cross-paper themes, adversarial review passes, PDF output, and Zotero note creation.",
       "source": "./",
-      "strict": false,
+      "strict": true,
       "skills": [
         "./skills/rlm-research-analyzer"
       ]
